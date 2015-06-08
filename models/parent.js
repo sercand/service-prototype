@@ -18,6 +18,21 @@ export default class User {
     }
 
     save(done) {
-        db.user.insert(this, done);
+        db.parent.insert(this, done);
+    }
+
+    static findByEmail(email, opt, done) {
+        if (typeof done === 'undefined') {
+            done = opt;
+            opt = {};
+        }
+
+        db.parent.findOne({email: email}, opt, function (err, doc) {
+            if (err) {
+                return done(err);
+            } else {
+                return done(null, doc);
+            }
+        });
     }
 }

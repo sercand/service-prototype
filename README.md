@@ -1,7 +1,7 @@
 #API
 
-###ACCOUNT
-####Register
+###√ ACCOUNT
+####√ Register
 ```
 POST    /account/register
             - firstname
@@ -9,7 +9,7 @@ POST    /account/register
             - password
             - email
 ```
-####Login
+####√ Login
 ```
 POST    /account/login
             - email
@@ -21,7 +21,7 @@ POST    /registerdevice
             - uuid
             - model
             - platform
-            - version
+            - os_version
             - app_version
 ```
 ##V1 API
