@@ -15,7 +15,7 @@ POST    /account/login
             - email
             - password
 ```
-####DEVICE REGISTER
+####√ DEVICE REGISTER
 ```
 POST    /registerdevice
             - uuid
