@@ -6,16 +6,19 @@
 
 var db = require('../lib/db');
 var config = require('config');
+var cfenv = require("cfenv");
 
+var appEnv = cfenv.getAppEnv();
+
+console.log(appEnv.bind, appEnv.port);
+console.log(appEnv.getServiceURL("mongodb0"));
 var app, server;
 
 function start() {
     return new Promise(function (resolve) {
-
         app = require('../lib/app');
-        app.set('port', config.server.port);
 
-        server = app.listen(app.get('port'), function () {
+        server = app.listen(appEnv.port, appEnv.bind, function () {
             console.log('Express server listening on port ' + server.address().port);
             resolve();
         });
@@ -23,8 +26,11 @@ function start() {
 
 }
 
+let dbopts = {
+    url: appEnv.getServiceURL("mongodb0")
+};
 
-db.connect()
+db.connect(dbopts)
     .then(db.init)
     .then(start)
     .then(function () {             // All gone well log it

@@ -54,4 +54,11 @@ POST    /registerdevice
 /api/v1/game
     GET     /:id
     GET     /:id/getsettings
+    POST    /create
+        - name
+        - owner
+    POST    /:id/update
+        -data
+        -data
+
 ```
