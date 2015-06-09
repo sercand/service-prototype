@@ -31,11 +31,8 @@ export class Game {
         this.description = "";
         this.licence = "";
         this.builds = [];
-        this.images = {
-            icon: "",
-            logo: "",
-            screenshots: []
-        };
+        this.logo = "";
+        this.images = [];
     }
 
     save(cb) {

@@ -49,7 +49,7 @@ router.post('/register', function (req, res, next) {
             }
             return res.json({
                 success: true,
-                user_id: user._id
+                parent_id: user._id
             });
         });
     }
