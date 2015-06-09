@@ -1,1 +1,0 @@
-web: node --harmony ./bin/www.es6

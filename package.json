@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node --harmony ./bin/www.es6"
+    "start": "node --harmony ./bin/www"
   },
   "dependencies": {
     "async": "^1.2.1",
