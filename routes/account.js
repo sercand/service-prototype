@@ -12,11 +12,11 @@ var validator = require('validator');
 /* GET home page. */
 router.post('/register', function (req, res, next) {
 
-    var first = req.body.first_name;
-    var second = req.body.last_name;
+    let first = req.body.first_name;
+    let second = req.body.last_name;
 
-    var email = req.body.email;
-    var password = req.body.password;
+    let email = req.body.email;
+    let password = req.body.password;
 
     if (!first || !second) {
         return next(new Error("User's name is missing"));
@@ -25,7 +25,7 @@ router.post('/register', function (req, res, next) {
         return next(new Error("User's email is missing"));
     }
     if (!validator.isEmail(email)) {
-        return next(new Error("Email is invalid"));
+        next(new Error("Email is invalid"));
     }
     if (!password) {
         return next(new Error("User's password is missing"));
@@ -34,7 +34,7 @@ router.post('/register', function (req, res, next) {
         return next(new Error("Password is short"));
     }
 
-    var user = new Parent(first, second, email);
+    let user = new Parent(first, second, email);
 
     function parentFounded(e_err, e_doc) {
         if (e_err) {
@@ -64,8 +64,8 @@ router.post('/register', function (req, res, next) {
 });
 
 router.post('/login', function (req, res, next) {
-    var email = req.body.email;
-    var password = req.body.password;
+    let email = req.body.email;
+    let password = req.body.password;
 
     if (!email) {
         return next(new Error("User's email is missing"));
@@ -74,14 +74,13 @@ router.post('/login', function (req, res, next) {
         return next(new Error("User's password is missing"));
     }
 
-    Parent.findByEmail(email, {}, function (err, doc) {
+    Parent.findByEmail(email, {fields: {_id: 1, password: 1}}, function (err, doc) {
         if (err) {
             return next(err);
         }
         if (!doc) {
             return next(new Error("User not found"));
         }
-
         hash.validPassword(password, doc.password, (err2, valid)=> {
             if (err2) {
                 return next(err2);
@@ -89,7 +88,7 @@ router.post('/login', function (req, res, next) {
             if (valid) {
                 return res
                     .status(200)
-                    .json({success: true, user_id: doc._id});
+                    .json({success: true, parent_id: doc._id});
             } else {
                 return next(new Error("Auth Error"));
             }

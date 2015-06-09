@@ -11,12 +11,12 @@ var Device = require('../models/device');
 
 router.post('/', function (req, res, next) {
 
-    var uuid = req.body.uuid;
-    var model = req.body.model;
+    let uuid = req.body.uuid;
+    let model = req.body.model;
 
-    var platform = req.body.platform;
-    var os_version = req.body.os_version;
-    var app_version = req.body.app_version;
+    let platform = req.body.platform;
+    let os_version = req.body.os_version;
+    let app_version = req.body.app_version;
 
     if (!uuid) {
         return next(new Error("UUID is missing"));
@@ -33,7 +33,7 @@ router.post('/', function (req, res, next) {
     if (!app_version) {
         return next(new Error("App Version is missing"));
     }
-    var device = new Device(uuid, model, platform, os_version, app_version);
+    let device = new Device(uuid, model, platform, os_version, app_version);
 
     device.save((err)=> {
         if (err) {

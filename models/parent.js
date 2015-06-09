@@ -35,4 +35,32 @@ export default class User {
             }
         });
     }
+
+    static findById(id, opt, done) {
+        if (typeof done === 'undefined') {
+            done = opt;
+            opt = {};
+        }
+
+        var _id = id;
+        if (typeof id === 'string') {
+            _id = new ObjectID(id);
+        }
+        db.parent.findOne({_id: _id}, opt, function (err, doc) {
+            if (err) {
+                return done(err);
+            } else {
+                return done(null, doc);
+            }
+        });
+    }
+
+    static updatePassword(id, new_password, done) {
+        var _id = id;
+        if (typeof id === 'string') {
+            _id = new ObjectID(id);
+        }
+        db.parent.update({_id: _id}, {$set: {password: new_password}}, done);
+    }
+
 }

@@ -31,7 +31,6 @@ POST    /registerdevice
     GET     /:id
     POST    /:id/addchild
                 - name
-                - parent_id
     POST    /:id/changepassword
                 - old_password
                 - new_password
