@@ -1,0 +1,10 @@
+applications:
+- services:
+  - mongodb0
+  disk_quota: 1024M
+  host: otsimo
+  name: otsimo
+  path: .
+  domain: eu-gb.mybluemix.net
+  instances: 1
+  memory: 256M
