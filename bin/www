@@ -25,7 +25,7 @@ function start() {
 
 }
 
-let mongo_url = appEnv.getServiceURL("mongodb0");
+let mongo_url = appEnv.getServiceURL("mongodb0") || "mongodb://localhost:27017/Otsimo";
 
 db.connect(mongo_url)
     .then(db.init)
