@@ -5,7 +5,6 @@
  */
 
 var db = require('../lib/db');
-var config = require('config');
 var cfenv = require("cfenv");
 
 var appEnv = cfenv.getAppEnv();
@@ -19,18 +18,16 @@ function start() {
         app = require('../lib/app');
 
         server = app.listen(appEnv.port, appEnv.bind, function () {
-            console.log('Express server listening on port ' + server.address().port);
+            console.log("server starting on " + appEnv.url);
             resolve();
         });
     });
 
 }
 
-let dbopts = {
-    url: appEnv.getServiceURL("mongodb0")
-};
+let mongo_url = appEnv.getServiceURL("mongodb0");
 
-db.connect(dbopts)
+db.connect(mongo_url)
     .then(db.init)
     .then(start)
     .then(function () {             // All gone well log it
