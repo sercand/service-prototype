@@ -1,5 +1,7 @@
 applications:
-- disk_quota: 1024M
+- services:
+  - mongodb0
+  disk_quota: 1024M
   host: otsimo
   name: otsimo
   path: .
