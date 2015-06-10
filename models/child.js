@@ -64,4 +64,8 @@ export default class Child {
             }
         });
     }
+
+    static update(query, opt, cb) {
+        db.child.update(query, opt, cb);
+    }
 }

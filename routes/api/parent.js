@@ -10,7 +10,8 @@ var Parent = require('../../models/parent');
 var Child = require('../../models/child');
 var hash = require('../../lib/hash');
 var validator = require('validator');
-
+var async = require('async');
+var ObjectID = require('mongodb').ObjectID;
 
 /**
  * /api/v1/parent/:id
@@ -188,10 +189,111 @@ function getchildren(req, res, next) {
     });
 }
 
+function containsGame(child, id) {
+    for (var i = 0; i < child.games.length; i++) {
+        let g = child.games[i];
+        if (g.id.equals(id)) {
+            return g;
+        }
+    }
+    return null;
+}
+
+function activateGame(req, res, next) {
+    let parent_id = req.params.id;
+    if (!validator.isMongoId(parent_id)) {
+        return next(new Error("Invalid Parent ID"));
+    }
+    let game_id = req.body.game_id;
+
+    if (!validator.isMongoId(game_id)) {
+        return next(new Error("Invalid Game ID"));
+    }
+
+    Child.findByParentId(parent_id, (err, docs)=> {
+        if (err) {
+            return next(err);
+        }
+        if (!docs) {
+            return next(new Error("Children not found"));
+        }
+
+        async.each(docs, function (c, done) {
+            var g = containsGame(c, game_id);
+            if (g) {
+                Child.update({_id: c._id, "games.id": new ObjectID(game_id)}, {$set: {"games.$.active": true}}, done);
+            } else {
+                Child.update({_id: c._id}, {
+                    $push: {
+                        games: {
+                            id: new ObjectID(game_id),
+                            active: true
+                        }
+                    }
+                }, done);
+            }
+
+        }, function (err2) {
+            if (err2) {
+                return next(err2);
+            }
+            return res.status(200).json({
+                success: true
+            });
+        });
+    });
+}
+function disableGame(req, res, next) {
+    let parent_id = req.params.id;
+    if (!validator.isMongoId(parent_id)) {
+        return next(new Error("Invalid Parent ID"));
+    }
+    let game_id = req.body.game_id;
+
+    if (!validator.isMongoId(game_id)) {
+        return next(new Error("Invalid Game ID"));
+    }
+
+    Child.findByParentId(parent_id, (err, docs)=> {
+        if (err) {
+            return next(err);
+        }
+        if (!docs) {
+            return next(new Error("Children not found"));
+        }
+
+        async.each(docs, function (c, done) {
+            var g = containsGame(c, game_id);
+            if (g) {
+                Child.update({_id: c._id, "games.id": new ObjectID(game_id)}, {$set: {"games.$.active": false}}, done);
+            } else {
+                Child.update({_id: c._id}, {
+                    $push: {
+                        games: {
+                            id: new ObjectID(game_id),
+                            active: false
+                        }
+                    }
+                }, done);
+            }
+
+        }, function (err2) {
+            if (err2) {
+                return next(err2);
+            }
+            return res.status(200).json({
+                success: true
+            });
+        });
+    });
+}
+
 router.get('/:id', getParent);
 router.post('/:id/addchild', addChild);
 router.post('/:id/changepassword', changepassword);
 router.get('/:id/getchild/:child_id', getAChild);
 router.get('/:id/getchildren', getchildren);
+router.post('/:id/activategame', activateGame);
+router.post('/:id/disablegame', disableGame);
 
 module.exports = router;

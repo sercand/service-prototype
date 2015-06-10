@@ -17,7 +17,7 @@ function start() {
     return new Promise(function (resolve) {
         app = require('../lib/app');
 
-        server = app.listen(appEnv.port, appEnv.bind, function () {
+        server = app.listen(appEnv.port, "0.0.0.0", function () {
             console.log("server starting on " + appEnv.url);
             resolve();
         });
