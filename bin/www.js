@@ -6,18 +6,20 @@
 
 var db = require('../lib/db');
 var cfenv = require("cfenv");
-
+var http = require('http');
 var appEnv = cfenv.getAppEnv();
 
 console.log(appEnv.bind, appEnv.port);
 console.log(appEnv.getServiceURL("mongodb0"));
-var app, server;
+var app, io, server;
 
 function start() {
     return new Promise(function (resolve) {
         app = require('../lib/app');
+        server = http.createServer(app);
+        io = require('../lib/io')(server);
 
-        server = app.listen(appEnv.port, "0.0.0.0", function () {
+        server.listen(appEnv.port, "0.0.0.0", function () {
             console.log("server starting on " + appEnv.url);
             resolve();
         });
