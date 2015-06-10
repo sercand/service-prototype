@@ -99,7 +99,23 @@ function PlayTimeByGame(req, res, next) {
         res.status(200).json({success: true, data: docs});
     });
 }
+function CmpPlayTime(req, res, next) {
+    let parent_id = req.params.id;
 
+    if (!validator.isMongoId(parent_id)) {
+        return next(new Error("Invalid Parent ID"));
+    }
+
+    var pid = new ObjectID(parent_id);
+    Stat.aggregate([
+        {$match: {parent_id: pid, event: Stat.Events.GameEnded}},
+        {$group: {_id: "$game_id", value: {$sum: "$value"}}}], function (err, docs) {
+        if (err) {
+            return next(err);
+        }
+        res.status(200).json({success: true, data: docs});
+    });
+}
 router.get('/allanswers/:id', AllAnswers);
 
 router.get('/allanswers/:id/:game_id', AnswersByGame);
@@ -107,5 +123,8 @@ router.get('/allanswers/:id/:game_id', AnswersByGame);
 router.get('/playtime/:id', PlayTime);
 
 router.get('/playtime/:id/:game_id', PlayTimeByGame);
+
+router.get('/compare/:id', CmpPlayTime);
+
 
 module.exports = router;
